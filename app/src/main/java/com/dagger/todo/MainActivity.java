@@ -10,13 +10,11 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UpdateItem {
 
-    private static final int REQUEST_CODE = 766;
     RecyclerView recyclerView;
     NoteAdapter noteAdapter;
     ArrayList<Note> noteArrayList;
-
 
 
     @Override
@@ -31,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-            AddTodoDialogFragment.getInstance(null)
-                    .show(getSupportFragmentManager(),"addNote");
+                AddTodoDialogFragment.getInstance(null,null)
+                        .show(getSupportFragmentManager(), "addNote");
             }
         });
     }
@@ -44,5 +42,20 @@ public class MainActivity extends AppCompatActivity {
         noteAdapter = new NoteAdapter(noteArrayList, this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(noteAdapter);
+    }
+
+    @Override
+    public void updateItem(Note note, Integer index) {
+        if (index != null) {
+            noteArrayList.set(index,note);
+        } else
+            noteArrayList.add(0,note);
+        noteAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void displayItem(Note note, int index) {
+        AddTodoDialogFragment.getInstance(note,index)
+                .show(getSupportFragmentManager(), "addNote");
     }
 }

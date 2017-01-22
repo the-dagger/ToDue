@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     @Override
     protected void onResume() {
         super.onResume();
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         noteAdapter = new NoteAdapter(noteArrayList, this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(noteAdapter);

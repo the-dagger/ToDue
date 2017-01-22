@@ -1,11 +1,12 @@
 package com.dagger.todo;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private ArrayList<Note> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
+    String[] priorities = {"Low", "Medium", "High"};
+    String[] completionStatus = {"ToDo", "Done"};
+    Context context;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -27,6 +31,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     public NoteAdapter(ArrayList<Note> arrayList, Context context) {
         this.arrayList = arrayList;
+        this.context = context;
         updateItem = (UpdateItem) context;
     }
 
@@ -35,7 +40,20 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         holder.todoTitle.setText(arrayList.get(position).getTitle());
         holder.todoContent.setText(arrayList.get(position).getContent());
         holder.dueDate.setText(arrayList.get(position).getDueDate());
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        holder.priority.setText(priorities[arrayList.get(position).getPriority()]);
+        holder.dueDate.setText(arrayList.get(position).getDueDate());
+        switch (arrayList.get(position).getPriority()){
+            case 0 :
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityLow));
+                break;
+            case 1 :
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityMedium));
+                break;
+            case 2 :
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityHigh));
+                break;
+        }
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateItem.displayItem(arrayList.get(holder.getAdapterPosition()), holder.getAdapterPosition());
@@ -49,7 +67,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout linearLayout;
+        CardView cardView;
         TextView dueDate;
         TextView priority;
         TextView todoTitle;
@@ -57,7 +75,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
         ViewHolder(View itemView) {
             super(itemView);
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.single_item_linear_layout);
+            cardView = (CardView) itemView.findViewById(R.id.single_item_linear_layout);
             todoContent = (TextView) itemView.findViewById(R.id.todo_content);
             todoTitle = (TextView) itemView.findViewById(R.id.todo_title);
             priority = (TextView) itemView.findViewById(R.id.priority);

@@ -1,4 +1,4 @@
-package com.dagger.todo;
+package com.dagger.todo.adapters;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,19 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.dagger.todo.data.ToDo;
+import com.dagger.todo.R;
+import com.dagger.todo.utils.UpdateItem;
+
 import java.util.ArrayList;
 
 /**
- * Created by Harshit on 05/12/16.
+ * Created by Harshit on 05/12/16
  */
 
-class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
-    private ArrayList<Note> arrayList = new ArrayList<>();
+    private ArrayList<ToDo> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
-    String[] priorities = {"Low", "Medium", "High"};
-    String[] completionStatus = {"ToDo", "Done"};
-    Context context;
+    private String[] priorities = {"Low", "Medium", "High"};
+    private Context context;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -29,7 +32,7 @@ class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
-    public NoteAdapter(ArrayList<Note> arrayList, Context context) {
+    public TodoAdapter(ArrayList<ToDo> arrayList, Context context) {
         this.arrayList = arrayList;
         this.context = context;
         updateItem = (UpdateItem) context;

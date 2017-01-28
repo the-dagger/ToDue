@@ -1,4 +1,4 @@
-package com.dagger.todo;
+package com.dagger.todo.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,10 +17,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.dagger.todo.TodoApp;
+import com.dagger.todo.data.ToDo;
+import com.dagger.todo.R;
+import com.dagger.todo.utils.UpdateItem;
+
 import java.util.Calendar;
 
 /**
- * Created by Harshit on 21/01/17.
+ * Created by Harshit on 21/01/17
  */
 
 public class AddTodoDialogFragment extends DialogFragment implements DatePicker.OnDateChangedListener {
@@ -32,14 +37,14 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     String date;
     View dialogView;
     DatePicker datePicker;
-    static Note currentNote;
+    static ToDo currentToDo;
     UpdateItem updateItem;
     String[] priorities = {"Low", "Medium", "High"};
     String[] completionStatus = {"ToDo", "Done"};
     static Integer currentIndex;
 
-    public static AddTodoDialogFragment getInstance(@Nullable Note note, @Nullable Integer index) {
-        currentNote = note;
+    public static AddTodoDialogFragment getInstance(@Nullable ToDo toDo, @Nullable Integer index) {
+        currentToDo = toDo;
         currentIndex = index;
         return new AddTodoDialogFragment();
     }
@@ -47,6 +52,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        TodoApp.setFontOnFragment(getContext());
         updateItem = (UpdateItem) getActivity();
     }
 
@@ -74,14 +80,14 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
         });
         prioritySpinner.setAdapter(priorityAdapter);
         statusSpinner.setAdapter(statusAdapter);
-        if (currentNote != null) {
-            title.setText(currentNote.getTitle(), TextView.BufferType.EDITABLE);
-            content.setText(currentNote.getContent(), TextView.BufferType.EDITABLE);
-            prioritySpinner.setSelection(currentNote.getPriority());
-            statusSpinner.setSelection(currentNote.isComplete());
+        if (currentToDo != null) {
+            title.setText(currentToDo.getTitle(), TextView.BufferType.EDITABLE);
+            content.setText(currentToDo.getContent(), TextView.BufferType.EDITABLE);
+            prioritySpinner.setSelection(currentToDo.getPriority());
+            statusSpinner.setSelection(currentToDo.isComplete());
         }
         return new AlertDialog.Builder(getContext())
-                .setTitle("Add a new Note")
+                .setTitle("Add a new ToDo")
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -92,11 +98,11 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!title.getText().toString().equals("")) {
-                            Note note = new Note(title.getText().toString(),
+                            ToDo toDo = new ToDo(title.getText().toString(),
                                     content.getText().toString(),
                                     statusSpinner.getSelectedItemPosition(), date,
                                     prioritySpinner.getSelectedItemPosition());
-                            updateItem.updateItem(note, currentIndex);
+                            updateItem.updateItem(toDo, currentIndex);
                         } else
                             Snackbar.make(getActivity().findViewById(R.id.fab), "Title Should not be null", Snackbar.LENGTH_SHORT).show();
                     }

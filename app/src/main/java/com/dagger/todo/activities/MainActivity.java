@@ -1,4 +1,4 @@
-package com.dagger.todo;
+package com.dagger.todo.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,13 +8,19 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.dagger.todo.data.ToDo;
+import com.dagger.todo.adapters.TodoAdapter;
+import com.dagger.todo.R;
+import com.dagger.todo.utils.UpdateItem;
+import com.dagger.todo.fragments.AddTodoDialogFragment;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements UpdateItem {
 
     RecyclerView recyclerView;
-    NoteAdapter noteAdapter;
-    ArrayList<Note> noteArrayList;
+    TodoAdapter todoAdapter;
+    ArrayList<ToDo> toDoArrayList;
 
 
     @Override
@@ -23,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        noteArrayList = new ArrayList<>();
+        toDoArrayList = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.contentRV);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,23 +45,23 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     protected void onResume() {
         super.onResume();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        noteAdapter = new NoteAdapter(noteArrayList, this);
+        todoAdapter = new TodoAdapter(toDoArrayList, this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(noteAdapter);
+        recyclerView.setAdapter(todoAdapter);
     }
 
     @Override
-    public void updateItem(Note note, Integer index) {
+    public void updateItem(ToDo toDo, Integer index) {
         if (index != null) {
-            noteArrayList.set(index,note);
+            toDoArrayList.set(index, toDo);
         } else
-            noteArrayList.add(0,note);
-        noteAdapter.notifyDataSetChanged();
+            toDoArrayList.add(0, toDo);
+        todoAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void displayItem(Note note, int index) {
-        AddTodoDialogFragment.getInstance(note,index)
+    public void displayItem(ToDo toDo, int index) {
+        AddTodoDialogFragment.getInstance(toDo,index)
                 .show(getSupportFragmentManager(), "addNote");
     }
 }

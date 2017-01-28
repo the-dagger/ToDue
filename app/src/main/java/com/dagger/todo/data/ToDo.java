@@ -1,10 +1,10 @@
-package com.dagger.todo;
+package com.dagger.todo.data;
 
 /**
- * Created by Harshit on 05/12/16.
+ * Created by Harshit on 05/12/16
  */
 
-public class Note {
+public class ToDo {
 
     private String title;
     private String content;
@@ -16,11 +16,7 @@ public class Note {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public Note(String title, String content, int isComplete, String date, int priority) {
+    public ToDo(String title, String content, int isComplete, String date, int priority) {
         this.title = title;
         this.content = content;
         this.isComplete = isComplete;
@@ -30,10 +26,6 @@ public class Note {
 
     public int getPriority() {
         return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 
     public String getTitle() {
@@ -48,15 +40,8 @@ public class Note {
         return content;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public int isComplete() {
         return isComplete;
     }
 
-    public void setComplete(int complete) {
-        isComplete = complete;
-    }
 }

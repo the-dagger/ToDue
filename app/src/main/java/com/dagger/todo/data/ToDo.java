@@ -11,17 +11,19 @@ public class ToDo {
     private int isComplete;
     private String dueDate;
     private int priority;
+    private long timeOfAddition;
 
     public String getDueDate() {
         return dueDate;
     }
 
-    public ToDo(String title, String content, int isComplete, String date, int priority) {
+    public ToDo(String title, String content, int isComplete, String date, int priority, long timeOfAddition) {
         this.title = title;
         this.content = content;
         this.isComplete = isComplete;
         this.dueDate = date;
         this.priority = priority;
+        this.timeOfAddition = timeOfAddition;
     }
 
     public int getPriority() {
@@ -44,4 +46,7 @@ public class ToDo {
         return isComplete;
     }
 
+    long getTimeOfAddition() {
+        return timeOfAddition;
+    }
 }

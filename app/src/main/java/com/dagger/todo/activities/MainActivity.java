@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.dagger.todo.data.ToDo;
 import com.dagger.todo.adapters.TodoAdapter;
 import com.dagger.todo.R;
+import com.dagger.todo.data.ToDoItemDatabase;
 import com.dagger.todo.utils.UpdateItem;
 import com.dagger.todo.fragments.AddTodoDialogFragment;
 
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     RecyclerView recyclerView;
     TodoAdapter todoAdapter;
     ArrayList<ToDo> toDoArrayList;
-
+    ToDoItemDatabase toDoItemDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toDoArrayList = new ArrayList<>();
+        toDoItemDatabase = ToDoItemDatabase.getToDoItemDatabase(this);
+        toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
         recyclerView = (RecyclerView) findViewById(R.id.contentRV);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -54,8 +58,11 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     public void updateItem(ToDo toDo, Integer index) {
         if (index != null) {
             toDoArrayList.set(index, toDo);
-        } else
+            toDoItemDatabase.updateToDoItem(toDo);
+        } else {
             toDoArrayList.add(0, toDo);
+            toDoItemDatabase.addToDoItem(toDo);
+        }
         todoAdapter.notifyDataSetChanged();
     }
 

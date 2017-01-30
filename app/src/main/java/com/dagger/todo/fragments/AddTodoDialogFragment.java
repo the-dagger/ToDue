@@ -22,6 +22,7 @@ import com.dagger.todo.data.ToDo;
 import com.dagger.todo.R;
 import com.dagger.todo.utils.UpdateItem;
 
+import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -42,6 +43,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     String[] priorities = {"Low", "Medium", "High"};
     String[] completionStatus = {"ToDo", "Done"};
     static Integer currentIndex;
+    Calendar calendar;
 
     public static AddTodoDialogFragment getInstance(@Nullable ToDo toDo, @Nullable Integer index) {
         currentToDo = toDo;
@@ -67,7 +69,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
         datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
         prioritySpinner = (Spinner) dialogView.findViewById(R.id.priority_spinners);
         statusSpinner = (Spinner) dialogView.findViewById(R.id.status_spinner);
-        Calendar calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         date = datePicker.getDayOfMonth() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getYear();
         datePicker.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
@@ -97,11 +99,12 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        long currtime = calendar.getTimeInMillis();
                         if (!title.getText().toString().equals("")) {
                             ToDo toDo = new ToDo(title.getText().toString(),
                                     content.getText().toString(),
                                     statusSpinner.getSelectedItemPosition(), date,
-                                    prioritySpinner.getSelectedItemPosition());
+                                    prioritySpinner.getSelectedItemPosition(),currtime);
                             updateItem.updateItem(toDo, currentIndex);
                         } else
                             Snackbar.make(getActivity().findViewById(R.id.fab), "Title Should not be null", Snackbar.LENGTH_SHORT).show();

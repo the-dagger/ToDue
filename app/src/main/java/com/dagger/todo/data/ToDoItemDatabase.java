@@ -100,11 +100,11 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
                 Log.e("usersSelectQuery", toDoUpdateQuery);
                 try {
                     if (cursor.moveToFirst()) {
+                        sqLiteDatabase.setTransactionSuccessful();
                     }
                 } finally {
                     if (cursor != null && !cursor.isClosed()) {
                         cursor.close();
-                        sqLiteDatabase.setTransactionSuccessful();
                         sqLiteDatabase.endTransaction();
                     }
                 }

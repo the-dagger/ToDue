@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="64dp"
+        android:visibility="gone"
+        android:id="@+id/noToDo"
+        app:srcCompat="@drawable/ic_done_all_black_24dp"
+        android:contentDescription="@string/no_todo_left" />
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/contentRV"
     android:layout_marginTop="?attr/actionBarSize"
@@ -9,3 +23,4 @@
     android:padding="@dimen/item_offset"
     tools:context="com.dagger.todo.activities.MainActivity"
     tools:showIn="@layout/activity_main" />
+</LinearLayout>

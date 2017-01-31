@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ToDo</string>
     <string name="action_settings">Settings</string>
-    <string name="title">TITLE</string>
-    <string name="content">CONTENT</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="priority">Priority</string>
+    <string name="due_by">Due By</string>
+    <string name="description">Description</string>
+    <string name="no_todo_left">No ToDo Left</string>
 </resources>

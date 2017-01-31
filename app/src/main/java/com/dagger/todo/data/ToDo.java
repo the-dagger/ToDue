@@ -8,7 +8,6 @@ public class ToDo {
 
     private String title;
     private String content;
-    private int isComplete;
     private String dueDate;
     private int priority;
     private long timeOfAddition;
@@ -17,10 +16,9 @@ public class ToDo {
         return dueDate;
     }
 
-    public ToDo(String title, String content, int isComplete, String date, int priority, long timeOfAddition) {
+    public ToDo(String title, String content, String date, int priority, long timeOfAddition) {
         this.title = title;
         this.content = content;
-        this.isComplete = isComplete;
         this.dueDate = date;
         this.priority = priority;
         this.timeOfAddition = timeOfAddition;
@@ -40,10 +38,6 @@ public class ToDo {
 
     public String getContent() {
         return content;
-    }
-
-    public int isComplete() {
-        return isComplete;
     }
 
     public long getTimeOfAddition() {

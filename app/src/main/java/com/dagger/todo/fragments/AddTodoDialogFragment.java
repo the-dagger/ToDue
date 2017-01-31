@@ -19,9 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dagger.todo.R;
-import com.dagger.todo.TodoApp;
 import com.dagger.todo.data.ToDo;
-import com.dagger.todo.utils.UpdateItem;
+import com.dagger.todo.helper.UpdateItem;
 
 import java.util.Calendar;
 
@@ -32,7 +31,6 @@ import java.util.Calendar;
 public class AddTodoDialogFragment extends DialogFragment implements DatePicker.OnDateChangedListener {
 
     Spinner prioritySpinner;
-    Spinner statusSpinner;
     EditText content;
     EditText title;
     String date;
@@ -41,7 +39,6 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     static ToDo currentToDo;
     UpdateItem updateItem;
     String[] priorities = {"Low", "Medium", "High"};
-    String[] completionStatus = {"ToDo", "Done"};
     static Integer currentIndex;
     Calendar calendar;
     static long todoCreationTime = 1;
@@ -55,7 +52,6 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        TodoApp.setFontOnFragment(getContext());
         updateItem = (UpdateItem) getActivity();
     }
 
@@ -63,13 +59,11 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, priorities);
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, completionStatus);
         dialogView = LayoutInflater.from(getContext()).inflate(R.layout.activity_add_note, null);
         title = (EditText) dialogView.findViewById(R.id.todo_title_editText);
         content = (EditText) dialogView.findViewById(R.id.todo_content_edittext);
         datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
         prioritySpinner = (Spinner) dialogView.findViewById(R.id.priority_spinners);
-        statusSpinner = (Spinner) dialogView.findViewById(R.id.status_spinner);
         calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         date = datePicker.getDayOfMonth() + "-" + (datePicker.getMonth() + 1) + "-" + datePicker.getYear();
@@ -82,12 +76,10 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
             }
         });
         prioritySpinner.setAdapter(priorityAdapter);
-        statusSpinner.setAdapter(statusAdapter);
         if (currentToDo != null) {
             title.setText(currentToDo.getTitle(), TextView.BufferType.EDITABLE);
             content.setText(currentToDo.getContent(), TextView.BufferType.EDITABLE);
             prioritySpinner.setSelection(currentToDo.getPriority());
-            statusSpinner.setSelection(currentToDo.isComplete());
             todoCreationTime = currentToDo.getTimeOfAddition();
         }
         return new AlertDialog.Builder(getContext())
@@ -106,8 +98,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                         if (!title.getText().toString().equals("")) {
                             Log.e("CreationTime", String.valueOf(todoCreationTime));
                             ToDo toDo = new ToDo(title.getText().toString(),
-                                    content.getText().toString(),
-                                    statusSpinner.getSelectedItemPosition(), date,
+                                    content.getText().toString(), date,
                                     prioritySpinner.getSelectedItemPosition(), todoCreationTime);
                             updateItem.updateItem(toDo, currentIndex);
                         } else

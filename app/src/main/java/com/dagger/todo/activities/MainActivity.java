@@ -6,16 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.dagger.todo.R;
 import com.dagger.todo.adapters.TodoAdapter;
 import com.dagger.todo.data.ToDo;
 import com.dagger.todo.data.ToDoItemDatabase;
 import com.dagger.todo.fragments.AddTodoDialogFragment;
-import com.dagger.todo.utils.ItemOffsetDecoration;
-import com.dagger.todo.utils.UpdateItem;
+import com.dagger.todo.helper.ItemOffsetDecoration;
+import com.dagger.todo.helper.SimpleTouchHelperCallback;
+import com.dagger.todo.helper.UpdateItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,9 +28,10 @@ import jp.wasabeef.recyclerview.animators.LandingAnimator;
 public class MainActivity extends AppCompatActivity implements UpdateItem {
 
     RecyclerView recyclerView;
-    TodoAdapter todoAdapter;
+    TodoAdapter toDoAdapter;
     ArrayList<ToDo> toDoArrayList;
     ToDoItemDatabase toDoItemDatabase;
+    ImageView noToDo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
         Collections.reverse(toDoArrayList);
         recyclerView = (RecyclerView) findViewById(R.id.contentRV);
+        noToDo = (ImageView) findViewById(R.id.noToDo);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setItemAnimator(new LandingAnimator());
@@ -57,36 +62,48 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     protected void onResume() {
         super.onResume();
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        todoAdapter = new TodoAdapter(toDoArrayList, this);
+        toDoAdapter = new TodoAdapter(toDoArrayList, this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(todoAdapter);
+        recyclerView.setAdapter(toDoAdapter);
+        ItemTouchHelper.Callback callback= new SimpleTouchHelperCallback(toDoAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
+        checkForEmptyList(toDoArrayList);
     }
 
     @Override
     public void updateItem(ToDo toDo, Integer index) {
         if (index != null) {
-            Log.e("UPDATE","Index isn't null");
-            if (toDo.isComplete() == 1) {
-                todoAdapter.notifyItemRemoved(index);
-                toDoArrayList.remove(index.intValue());
-                toDoItemDatabase.deleteToDoFromDatabase(toDo);
-            } else {
+            Log.d("UPDATE","Index isn't null");
                 toDoArrayList.set(index, toDo);
                 toDoItemDatabase.updateToDoItem(toDo);
-                todoAdapter.notifyItemChanged(index);
-            }
+                toDoAdapter.notifyItemChanged(index);
         } else {
-            Log.e("UPDATE","Index is null");
+            Log.d("UPDATE","Index is null");
             toDoArrayList.add(0, toDo);
             toDoItemDatabase.addToDoItem(toDo);
-            todoAdapter.notifyItemInserted(0);
+            toDoAdapter.notifyItemInserted(0);
             recyclerView.scrollToPosition(0);
         }
+        checkForEmptyList(toDoArrayList);
     }
 
     @Override
     public void displayItem(ToDo toDo, int index) {
         AddTodoDialogFragment.getInstance(toDo, index)
                 .show(getSupportFragmentManager(), "addNote");
+    }
+
+    @Override
+    public void itemDeleted(ArrayList<ToDo> toDos) {
+        checkForEmptyList(toDos);
+    }
+
+    public void checkForEmptyList(ArrayList<ToDo> toDos){
+        if (toDos.size() == 0){
+            noToDo.setVisibility(View.VISIBLE);
+        }else {
+            noToDo.setVisibility(View.GONE);
+        }
     }
 }

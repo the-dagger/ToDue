@@ -4,6 +4,6 @@
     <color name="colorPrimaryDark">#1976D2</color>
     <color name="colorAccent">#FF4081</color>
     <color name="priorityHigh">#FF8A80</color>
-    <color name="priorityMedium">#FFFFAD</color>
+    <color name="priorityMedium">#80D8FF</color>
     <color name="priorityLow">#CCFF90</color>
 </resources>

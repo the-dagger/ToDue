@@ -25,7 +25,6 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
     private static final String TODO_TITLE = "title";
     private static final String TODO_CONTENT = "content";
     private static final String TODO_DUE_DATE = "dueDate";
-    private static final String TODO_STATUS = "status";
     private static final String TODO_PRIORITY = "priority";
     private static final String TODO_TIME = "creationTime";
 
@@ -46,7 +45,7 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
                 "(" +
                 TODO_ID + " INTEGER PRIMARY KEY," + // Define a primary key
                 TODO_TITLE + " TEXT, " + TODO_CONTENT + " TEXT," + // Define a foreign key
-                TODO_DUE_DATE + " TEXT, " + TODO_PRIORITY + " INTEGER, " + TODO_STATUS + " INTEGER, " + TODO_TIME + " INTEGER)";
+                TODO_DUE_DATE + " TEXT, " + TODO_PRIORITY + " INTEGER, " + TODO_TIME + " INTEGER)";
         Log.e("Todo", CREATE_TODO_TABLE);
         db.execSQL(CREATE_TODO_TABLE);
     }
@@ -68,7 +67,6 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
             values.put(TODO_CONTENT, toDo.getContent());
             values.put(TODO_DUE_DATE, toDo.getDueDate());
             values.put(TODO_PRIORITY, toDo.getPriority());
-            values.put(TODO_STATUS, toDo.isComplete());
             values.put(TODO_TIME, toDo.getTimeOfAddition());
             long id = sqLiteDatabase.insertOrThrow(TABLE_TODO, null, values);
             Log.e("InsertedID", String.valueOf(id));
@@ -86,7 +84,6 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
         values.put(TODO_CONTENT, toDo.getContent());
         values.put(TODO_DUE_DATE, toDo.getDueDate());
         values.put(TODO_PRIORITY, toDo.getPriority());
-        values.put(TODO_STATUS, toDo.isComplete());
         values.put(TODO_TIME, toDo.getTimeOfAddition());
         try {
             int rows = sqLiteDatabase.update(TABLE_TODO, values, TODO_TIME + " = ?", new String[]{String.valueOf(toDo.getTimeOfAddition())});
@@ -140,7 +137,6 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
                 do {
                     ToDo toDo = new ToDo(cursor.getString(cursor.getColumnIndex(TODO_TITLE)),
                             cursor.getString(cursor.getColumnIndex(TODO_CONTENT)),
-                            cursor.getInt(cursor.getColumnIndex(TODO_STATUS)),
                             cursor.getString(cursor.getColumnIndex(TODO_DUE_DATE)),
                             cursor.getInt(cursor.getColumnIndex(TODO_PRIORITY)),
                             cursor.getLong(cursor.getColumnIndex(TODO_TIME)));

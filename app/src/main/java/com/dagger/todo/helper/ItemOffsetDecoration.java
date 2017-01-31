@@ -1,4 +1,4 @@
-package com.dagger.todo.utils;
+package com.dagger.todo.helper;
 
 import android.content.Context;
 import android.graphics.Rect;

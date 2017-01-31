@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.dagger.todo.data.ToDo;
 import com.dagger.todo.R;
-import com.dagger.todo.utils.UpdateItem;
+import com.dagger.todo.data.ToDoItemDatabase;
+import com.dagger.todo.helper.ItemTouchHelperAdapter;
+import com.dagger.todo.helper.UpdateItem;
 
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ import java.util.ArrayList;
  * Created by Harshit on 05/12/16
  */
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private ArrayList<ToDo> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
@@ -42,7 +44,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         holder.todoTitle.setText(arrayList.get(position).getTitle());
         holder.todoContent.setText(arrayList.get(position).getContent());
         holder.dueDate.setText(arrayList.get(position).getDueDate());
-//        holder.priority.setText(priorities[arrayList.get(position).getPriority()]);
         holder.dueDate.setText(arrayList.get(position).getDueDate());
         switch (arrayList.get(position).getPriority()){
             case 0 :
@@ -68,10 +69,17 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         return arrayList.size();
     }
 
+    @Override
+    public void onDismiss(int position) {
+        ToDoItemDatabase.getToDoItemDatabase(context).deleteToDoFromDatabase(arrayList.get(position));
+        arrayList.remove(position);
+        notifyItemRemoved(position);
+        updateItem.itemDeleted(arrayList);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView dueDate;
-        TextView priority;
         TextView todoTitle;
         TextView todoContent;
 
@@ -80,7 +88,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             cardView = (CardView) itemView.findViewById(R.id.single_item_linear_layout);
             todoContent = (TextView) itemView.findViewById(R.id.todo_content);
             todoTitle = (TextView) itemView.findViewById(R.id.todo_title);
-//            priority = (TextView) itemView.findViewById(R.id.priority);
             dueDate = (TextView) itemView.findViewById(R.id.due_date);
         }
     }

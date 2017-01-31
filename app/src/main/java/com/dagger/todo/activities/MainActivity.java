@@ -9,14 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
-import com.dagger.todo.data.ToDo;
-import com.dagger.todo.adapters.TodoAdapter;
 import com.dagger.todo.R;
+import com.dagger.todo.adapters.TodoAdapter;
+import com.dagger.todo.data.ToDo;
 import com.dagger.todo.data.ToDoItemDatabase;
-import com.dagger.todo.utils.UpdateItem;
 import com.dagger.todo.fragments.AddTodoDialogFragment;
+import com.dagger.todo.utils.UpdateItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements UpdateItem {
 
@@ -34,12 +35,13 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         toDoArrayList = new ArrayList<>();
         toDoItemDatabase = ToDoItemDatabase.getToDoItemDatabase(this);
         toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
+        Collections.reverse(toDoArrayList);
         recyclerView = (RecyclerView) findViewById(R.id.contentRV);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                AddTodoDialogFragment.getInstance(null,null)
+                AddTodoDialogFragment.getInstance(null, null)
                         .show(getSupportFragmentManager(), "addNote");
             }
         });
@@ -57,9 +59,16 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     @Override
     public void updateItem(ToDo toDo, Integer index) {
         if (index != null) {
-            toDoArrayList.set(index, toDo);
-            toDoItemDatabase.updateToDoItem(toDo);
+            Log.e("UPDATE","Index isn't null");
+            if (toDo.isComplete() == 1) {
+                toDoArrayList.remove(index.intValue());
+                toDoItemDatabase.deleteToDoFromDatabase(toDo);
+            } else {
+                toDoArrayList.set(index, toDo);
+                toDoItemDatabase.updateToDoItem(toDo);
+            }
         } else {
+            Log.e("UPDATE","Index is null");
             toDoArrayList.add(0, toDo);
             toDoItemDatabase.addToDoItem(toDo);
         }
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
 
     @Override
     public void displayItem(ToDo toDo, int index) {
-        AddTodoDialogFragment.getInstance(toDo,index)
+        AddTodoDialogFragment.getInstance(toDo, index)
                 .show(getSupportFragmentManager(), "addNote");
     }
 }

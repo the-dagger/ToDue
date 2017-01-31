@@ -73,7 +73,7 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
             long id = sqLiteDatabase.insertOrThrow(TABLE_TODO, null, values);
             Log.e("InsertedID", String.valueOf(id));
             sqLiteDatabase.setTransactionSuccessful();
-        }finally {
+        } finally {
             sqLiteDatabase.endTransaction();
         }
     }
@@ -89,20 +89,17 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
         values.put(TODO_STATUS, toDo.isComplete());
         values.put(TODO_TIME, toDo.getTimeOfAddition());
         try {
-            int rows = sqLiteDatabase.update(TABLE_TODO, values, TODO_TIME + "= ?", new String[]{String.valueOf(toDo.getTimeOfAddition())});
+            int rows = sqLiteDatabase.update(TABLE_TODO, values, TODO_TIME + " = ?", new String[]{String.valueOf(toDo.getTimeOfAddition())});
+            Log.e("updateRows", String.valueOf(rows));
             if (rows == 1) {
                 // Get the primary key of the user we just updated
-                String usersSelectQuery = String.format("SELECT * FROM %s WHERE %s = ?",
+                String toDoUpdateQuery = String.format("SELECT * FROM %s WHERE %s = ?",
                         TABLE_TODO, TODO_TIME);
-                Cursor cursor = sqLiteDatabase.rawQuery(usersSelectQuery, new String[]{toDo.getTitle(),
-                        toDo.getContent(),
-                        toDo.getDueDate(),
-                        String.valueOf(toDo.getPriority()),
-                        String.valueOf(toDo.isComplete()),
+                Cursor cursor = sqLiteDatabase.rawQuery(toDoUpdateQuery, new String[]{
                         String.valueOf(toDo.getTimeOfAddition())});
+                Log.e("usersSelectQuery", toDoUpdateQuery);
                 try {
                     if (cursor.moveToFirst()) {
-                        sqLiteDatabase.setTransactionSuccessful();
                     }
                 } finally {
                     if (cursor != null && !cursor.isClosed()) {
@@ -112,6 +109,22 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteToDoFromDatabase(ToDo toDo) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        try {
+            String toDoDeleteQuery = String.format("DELETE FROM %s WHERE %s = ?",
+                    TABLE_TODO, TODO_TIME);
+            Log.e("DELETE", toDoDeleteQuery);
+            int rowsDeleted = sqLiteDatabase.delete(TABLE_TODO, TODO_TIME + " = ?", new String[]{String.valueOf(toDo.getTimeOfAddition())});
+            Log.e("Rows", String.valueOf(rowsDeleted));
+            sqLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.endTransaction();
         } catch (Exception e) {
             e.printStackTrace();
         }

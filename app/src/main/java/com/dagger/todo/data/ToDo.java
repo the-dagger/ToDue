@@ -46,7 +46,7 @@ public class ToDo {
         return isComplete;
     }
 
-    long getTimeOfAddition() {
+    public long getTimeOfAddition() {
         return timeOfAddition;
     }
 }

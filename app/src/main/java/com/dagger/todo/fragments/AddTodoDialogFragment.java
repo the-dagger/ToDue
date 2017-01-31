@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,12 +18,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.dagger.todo.R;
 import com.dagger.todo.TodoApp;
 import com.dagger.todo.data.ToDo;
-import com.dagger.todo.R;
 import com.dagger.todo.utils.UpdateItem;
 
-import java.sql.Time;
 import java.util.Calendar;
 
 /**
@@ -44,6 +44,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     String[] completionStatus = {"ToDo", "Done"};
     static Integer currentIndex;
     Calendar calendar;
+    static long todoCreationTime = 1;
 
     public static AddTodoDialogFragment getInstance(@Nullable ToDo toDo, @Nullable Integer index) {
         currentToDo = toDo;
@@ -87,6 +88,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
             content.setText(currentToDo.getContent(), TextView.BufferType.EDITABLE);
             prioritySpinner.setSelection(currentToDo.getPriority());
             statusSpinner.setSelection(currentToDo.isComplete());
+            todoCreationTime = currentToDo.getTimeOfAddition();
         }
         return new AlertDialog.Builder(getContext())
                 .setTitle("Add a new ToDo")
@@ -99,12 +101,14 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        long currtime = calendar.getTimeInMillis();
+                        if (currentIndex == null)
+                            todoCreationTime = calendar.getTimeInMillis();
                         if (!title.getText().toString().equals("")) {
+                            Log.e("CreationTime", String.valueOf(todoCreationTime));
                             ToDo toDo = new ToDo(title.getText().toString(),
                                     content.getText().toString(),
                                     statusSpinner.getSelectedItemPosition(), date,
-                                    prioritySpinner.getSelectedItemPosition(),currtime);
+                                    prioritySpinner.getSelectedItemPosition(), todoCreationTime);
                             updateItem.updateItem(toDo, currentIndex);
                         } else
                             Snackbar.make(getActivity().findViewById(R.id.fab), "Title Should not be null", Snackbar.LENGTH_SHORT).show();

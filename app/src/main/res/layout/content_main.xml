@@ -5,6 +5,7 @@
     android:layout_marginTop="?attr/actionBarSize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="4dp"
+    android:clipToPadding="false"
+    android:padding="@dimen/item_offset"
     tools:context="com.dagger.todo.activities.MainActivity"
     tools:showIn="@layout/activity_main" />

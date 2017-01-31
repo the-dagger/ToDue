@@ -23,7 +23,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
     private ArrayList<ToDo> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
-    private String[] priorities = {"Low", "Medium", "High"};
     private Context context;
 
     @Override
@@ -43,7 +42,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         holder.todoTitle.setText(arrayList.get(position).getTitle());
         holder.todoContent.setText(arrayList.get(position).getContent());
         holder.dueDate.setText(arrayList.get(position).getDueDate());
-        holder.priority.setText(priorities[arrayList.get(position).getPriority()]);
+//        holder.priority.setText(priorities[arrayList.get(position).getPriority()]);
         holder.dueDate.setText(arrayList.get(position).getDueDate());
         switch (arrayList.get(position).getPriority()){
             case 0 :
@@ -81,7 +80,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             cardView = (CardView) itemView.findViewById(R.id.single_item_linear_layout);
             todoContent = (TextView) itemView.findViewById(R.id.todo_content);
             todoTitle = (TextView) itemView.findViewById(R.id.todo_title);
-            priority = (TextView) itemView.findViewById(R.id.priority);
+//            priority = (TextView) itemView.findViewById(R.id.priority);
             dueDate = (TextView) itemView.findViewById(R.id.due_date);
         }
     }

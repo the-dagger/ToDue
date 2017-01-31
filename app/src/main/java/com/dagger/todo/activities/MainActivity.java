@@ -14,10 +14,13 @@ import com.dagger.todo.adapters.TodoAdapter;
 import com.dagger.todo.data.ToDo;
 import com.dagger.todo.data.ToDoItemDatabase;
 import com.dagger.todo.fragments.AddTodoDialogFragment;
+import com.dagger.todo.utils.ItemOffsetDecoration;
 import com.dagger.todo.utils.UpdateItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
 
 public class MainActivity extends AppCompatActivity implements UpdateItem {
 
@@ -37,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
         Collections.reverse(toDoArrayList);
         recyclerView = (RecyclerView) findViewById(R.id.contentRV);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
+        recyclerView.addItemDecoration(itemDecoration);
+        recyclerView.setItemAnimator(new LandingAnimator());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,18 +67,21 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         if (index != null) {
             Log.e("UPDATE","Index isn't null");
             if (toDo.isComplete() == 1) {
+                todoAdapter.notifyItemRemoved(index);
                 toDoArrayList.remove(index.intValue());
                 toDoItemDatabase.deleteToDoFromDatabase(toDo);
             } else {
                 toDoArrayList.set(index, toDo);
                 toDoItemDatabase.updateToDoItem(toDo);
+                todoAdapter.notifyItemChanged(index);
             }
         } else {
             Log.e("UPDATE","Index is null");
             toDoArrayList.add(0, toDo);
             toDoItemDatabase.addToDoItem(toDo);
+            todoAdapter.notifyItemInserted(0);
+            recyclerView.scrollToPosition(0);
         }
-        todoAdapter.notifyDataSetChanged();
     }
 
     @Override

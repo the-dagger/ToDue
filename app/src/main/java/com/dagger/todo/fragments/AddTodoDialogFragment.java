@@ -59,7 +59,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, priorities);
-        dialogView = LayoutInflater.from(getContext()).inflate(R.layout.activity_add_note, null);
+        dialogView = LayoutInflater.from(getContext()).inflate(R.layout.activity_add_todo, null);
         title = (EditText) dialogView.findViewById(R.id.todo_title_editText);
         content = (EditText) dialogView.findViewById(R.id.todo_content_edittext);
         datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
@@ -102,7 +102,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                                     prioritySpinner.getSelectedItemPosition(), todoCreationTime);
                             updateItem.updateItem(toDo, currentIndex);
                         } else
-                            Snackbar.make(getActivity().findViewById(R.id.fab), "Title Should not be null", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(getActivity().findViewById(R.id.fab), "Title Should not be empty", Snackbar.LENGTH_SHORT).show();
                     }
                 })
                 .setView(dialogView)

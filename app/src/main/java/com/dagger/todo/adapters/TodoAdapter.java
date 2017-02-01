@@ -1,6 +1,7 @@
 package com.dagger.todo.adapters;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dagger.todo.data.ToDo;
 import com.dagger.todo.R;
+import com.dagger.todo.data.ToDo;
 import com.dagger.todo.data.ToDoItemDatabase;
 import com.dagger.todo.helper.ItemTouchHelperAdapter;
 import com.dagger.todo.helper.UpdateItem;
@@ -26,10 +27,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     private ArrayList<ToDo> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
     private Context context;
+    private View view;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_note, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_todo, parent, false);
         return new ViewHolder(view);
     }
 
@@ -45,15 +47,15 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
         holder.todoContent.setText(arrayList.get(position).getContent());
         holder.dueDate.setText(arrayList.get(position).getDueDate());
         holder.dueDate.setText(arrayList.get(position).getDueDate());
-        switch (arrayList.get(position).getPriority()){
-            case 0 :
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityLow));
+        switch (arrayList.get(position).getPriority()) {
+            case 0:
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.priorityLow));
                 break;
-            case 1 :
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityMedium));
+            case 1:
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.priorityMedium));
                 break;
-            case 2 :
-                holder.cardView.setBackgroundColor(ContextCompat.getColor(context,R.color.priorityHigh));
+            case 2:
+                holder.cardView.setBackgroundColor(ContextCompat.getColor(context, R.color.priorityHigh));
                 break;
         }
         holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -70,11 +72,22 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     }
 
     @Override
-    public void onDismiss(int position) {
+    public void onDismiss(final int position) {
         ToDoItemDatabase.getToDoItemDatabase(context).deleteToDoFromDatabase(arrayList.get(position));
+        final ToDo removed = arrayList.get(position);
         arrayList.remove(position);
         notifyItemRemoved(position);
         updateItem.itemDeleted(arrayList);
+        Snackbar.make(view, "ToDo Deleted", Snackbar.LENGTH_SHORT)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToDoItemDatabase.getToDoItemDatabase(context).addToDoItem(removed);
+                        arrayList.add(position,removed);
+                        updateItem.updateItem(removed,position);
+                        notifyItemInserted(position);
+                    }
+                }).show();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,10 +98,11 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
 
         ViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.single_item_linear_layout);
+            cardView = (CardView) itemView.findViewById(R.id.single_item_card);
             todoContent = (TextView) itemView.findViewById(R.id.todo_content);
             todoTitle = (TextView) itemView.findViewById(R.id.todo_title);
             dueDate = (TextView) itemView.findViewById(R.id.due_date);
+            cardView.setRadius(4);
         }
     }
 }

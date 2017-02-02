@@ -76,16 +76,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     public void onDismiss(final int position) {
         ToDoItemDatabase.getToDoItemDatabase(context).deleteToDoFromDatabase(arrayList.get(position));
         removed = arrayList.get(position);
-        Snackbar.make(view, "ToDo Deleted", Snackbar.LENGTH_SHORT)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ToDoItemDatabase.getToDoItemDatabase(context).addToDoItem(removed);
-                        arrayList.add(position,removed);
-                        updateItem.updateItem(removed,position);
-                        notifyItemInserted(position);
-                    }
-                }).show();
+        updateItem.displayUndoSnackbar(position,removed);
         arrayList.remove(position);
         notifyItemRemoved(position);
         updateItem.itemDeleted(arrayList);

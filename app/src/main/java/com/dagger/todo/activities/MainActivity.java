@@ -2,6 +2,7 @@ package com.dagger.todo.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -97,6 +98,20 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     @Override
     public void itemDeleted(ArrayList<ToDo> toDos) {
         checkForEmptyList(toDos);
+    }
+
+    @Override
+    public void displayUndoSnackbar(final int position, final ToDo removed) {
+        Snackbar.make(findViewById(R.id.fab), "ToDo Deleted", Snackbar.LENGTH_SHORT)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToDoItemDatabase.getToDoItemDatabase(MainActivity.this).addToDoItem(removed);
+                        toDoArrayList.add(position,removed);
+                        updateItem(removed,position);
+                        toDoAdapter.notifyItemInserted(position);
+                    }
+                }).show();
     }
 
     public void checkForEmptyList(ArrayList<ToDo> toDos){

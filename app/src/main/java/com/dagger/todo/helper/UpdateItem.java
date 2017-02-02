@@ -17,4 +17,6 @@ public interface UpdateItem {
     void displayItem(ToDo toDo, int index);
 
     void itemDeleted(ArrayList<ToDo> toDos);
+
+    void displayUndoSnackbar(int position, ToDo removed);
 }

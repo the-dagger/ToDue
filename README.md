@@ -32,7 +32,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://raw.githubusercontent.com/the-dagger/CodepathToDo/master/todo.gif?token=AGQtlr3Fe_btt7HTtJPUthSGVXOKZ7E8ks5YnN9KwA%3D%3D' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://raw.githubusercontent.com/the-dagger/CodepathToDo/master/todo.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 

@@ -1,17 +1,22 @@
 package com.dagger.todo.fragments;
 
+import android.animation.Animator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -19,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.dagger.todo.R;
+import com.dagger.todo.activities.MainActivity;
 import com.dagger.todo.data.ToDo;
 import com.dagger.todo.helper.UpdateItem;
 
@@ -55,11 +61,19 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
         updateItem = (UpdateItem) getActivity();
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_add_todo, container);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        return view;
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, priorities);
-        dialogView = LayoutInflater.from(getContext()).inflate(R.layout.activity_add_todo, null);
+        dialogView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_add_todo, null);
         title = (EditText) dialogView.findViewById(R.id.todo_title_editText);
         content = (EditText) dialogView.findViewById(R.id.todo_content_edittext);
         datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);

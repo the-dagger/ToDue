@@ -110,7 +110,7 @@ public class AddTodoDialogFragment extends DialogFragment implements DatePicker.
                         if (currentIndex == null)
                             todoCreationTime = calendar.getTimeInMillis();
                         if (!title.getText().toString().equals("")) {
-                            Log.e("CreationTime", String.valueOf(todoCreationTime));
+                            Log.d("CreationTime", String.valueOf(todoCreationTime));
                             ToDo toDo = new ToDo(title.getText().toString(),
                                     content.getText().toString(), date,
                                     prioritySpinner.getSelectedItemPosition(), todoCreationTime);

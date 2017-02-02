@@ -28,6 +28,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     private UpdateItem updateItem;
     private Context context;
     private View view;
+    private ToDo removed;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,10 +75,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     @Override
     public void onDismiss(final int position) {
         ToDoItemDatabase.getToDoItemDatabase(context).deleteToDoFromDatabase(arrayList.get(position));
-        final ToDo removed = arrayList.get(position);
-        arrayList.remove(position);
-        notifyItemRemoved(position);
-        updateItem.itemDeleted(arrayList);
+        removed = arrayList.get(position);
         Snackbar.make(view, "ToDo Deleted", Snackbar.LENGTH_SHORT)
                 .setAction("Undo", new View.OnClickListener() {
                     @Override
@@ -88,6 +86,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
                         notifyItemInserted(position);
                     }
                 }).show();
+        arrayList.remove(position);
+        notifyItemRemoved(position);
+        updateItem.itemDeleted(arrayList);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

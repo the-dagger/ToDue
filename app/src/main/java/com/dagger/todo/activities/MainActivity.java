@@ -20,6 +20,7 @@ import com.dagger.todo.fragments.AddTodoDialogFragment;
 import com.dagger.todo.helper.ItemOffsetDecoration;
 import com.dagger.todo.helper.SimpleTouchHelperCallback;
 import com.dagger.todo.helper.UpdateItem;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     ArrayList<ToDo> toDoArrayList;
     ToDoItemDatabase toDoItemDatabase;
     ImageView noToDo;
+    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         toDoArrayList = new ArrayList<>();
         toDoItemDatabase = ToDoItemDatabase.getToDoItemDatabase(this);
         toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
@@ -50,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setItemAnimator(new LandingAnimator());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        toDoAdapter = new TodoAdapter(toDoArrayList, this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(toDoAdapter);
+        ItemTouchHelper.Callback callback= new SimpleTouchHelperCallback(toDoAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(recyclerView);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -62,13 +72,6 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     @Override
     protected void onResume() {
         super.onResume();
-        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        toDoAdapter = new TodoAdapter(toDoArrayList, this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(toDoAdapter);
-        ItemTouchHelper.Callback callback= new SimpleTouchHelperCallback(toDoAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
         checkForEmptyList(toDoArrayList);
     }
 

@@ -28,7 +28,7 @@ public class ToDoItemDatabase extends SQLiteOpenHelper {
     private static final String TODO_PRIORITY = "priority";
     private static final String TODO_TIME = "creationTime";
 
-    private ToDoItemDatabase(Context context) {
+    ToDoItemDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

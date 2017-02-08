@@ -27,12 +27,10 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     private ArrayList<ToDo> arrayList = new ArrayList<>();
     private UpdateItem updateItem;
     private Context context;
-    private View view;
-    private ToDo removed;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_todo, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_todo, parent, false);
         return new ViewHolder(view);
     }
 
@@ -75,8 +73,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> im
     @Override
     public void onDismiss(final int position) {
         ToDoItemDatabase.getToDoItemDatabase(context).deleteToDoFromDatabase(arrayList.get(position));
-        removed = arrayList.get(position);
-        updateItem.displayUndoSnackbar(position,removed);
+        ToDo removed = arrayList.get(position);
+        updateItem.displayUndoSnackbar(position, removed);
         arrayList.remove(position);
         notifyItemRemoved(position);
         updateItem.itemDeleted(arrayList);

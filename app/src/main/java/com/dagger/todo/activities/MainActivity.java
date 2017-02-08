@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
     ArrayList<ToDo> toDoArrayList;
     ToDoItemDatabase toDoItemDatabase;
     ImageView noToDo;
-    FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements UpdateItem {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         toDoArrayList = new ArrayList<>();
         toDoItemDatabase = ToDoItemDatabase.getToDoItemDatabase(this);
         toDoArrayList = toDoItemDatabase.getToDoFromDatabase();
